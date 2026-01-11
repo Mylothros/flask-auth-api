@@ -18,7 +18,6 @@ restApi/
 ├── app.py                 # Main Flask application factory
 ├── config.py             # Configuration settings
 ├── db.py                 # Database instance
-├── wsgi.py               # WSGI entry point
 ├── schemas.py            # Marshmallow schemas for validation
 ├── blocklist.py          # JWT token blocklist
 ├── docker-compose.yml    # Docker Compose configuration
