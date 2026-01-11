@@ -21,7 +21,7 @@ load_dotenv()
 
 def create_app(db_url=None):
     app = Flask(__name__)
-    connection = redis.from_url(os.getenv("REDIS_URL"))
+    connection = redis.from_url(os.getenv("REDIS_URL", "redis://localhost:5000"))
     app.queue = Queue("emails", connection=connection)
     app.config.from_object(Config)
 
