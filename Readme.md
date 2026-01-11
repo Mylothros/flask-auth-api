@@ -63,7 +63,7 @@ DATABASE_URL=postgresql://postgres:password@db:5432/myapp
 
 ### 3. Start the Application
 
-Run the following command to start both the web application and PostgreSQL database:
+Run the following command to start the web application, PostgreSQL database, and RabbitMQ:
 
 ```bash
 docker compose up --build --force-recreate --no-deps
@@ -74,7 +74,17 @@ docker compose up --build --force-recreate --no-deps
 - `--force-recreate`: Recreates containers even if configuration hasn't changed
 - `--no-deps`: Don't start linked services
 
-### 4. Access the Application
+### 4. Start the Email Worker
+
+In a separate terminal, run the RQ worker for email processing:
+
+```bash
+docker run -w /app run-task-test sh -c "rq worker -u <redisUrl> emails"
+```
+
+This starts the Redis Queue worker that processes email tasks in the background.
+
+### 5. Access the Application
 
 Once the containers are running:
 
