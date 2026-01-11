@@ -31,7 +31,11 @@ class UserRegister(MethodView):
             db.session.commit()
         except SQLAlchemyError as e:
             abort(500, message=str(e))
-        current_app.queue.enqueue(test_function)
+        if current_app.queue:
+            current_app.queue.enqueue(test_function)
+        else:
+            # Handle case when Redis is not available
+            print("Queue not available, skipping email task")
         return user
 
 @blp.route('/user/<int:user_id>')

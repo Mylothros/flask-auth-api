@@ -21,8 +21,14 @@ load_dotenv()
 
 def create_app(db_url=None):
     app = Flask(__name__)
-    connection = redis.from_url(os.getenv("REDIS_URL", "redis://localhost:5000"))
-    app.queue = Queue("emails", connection=connection)
+    # Fix Redis connection with proper fallback
+    redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
+    try:
+        connection = redis.from_url(redis_url)
+        app.queue = Queue("emails", connection=connection)
+    except Exception as e:
+        print(f"Redis connection failed: {e}")
+        app.queue = None
     app.config.from_object(Config)
 
     db.init_app(app)
