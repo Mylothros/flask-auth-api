@@ -3,11 +3,12 @@ from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 from passlib.hash import  pbkdf2_sha256
 from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, get_jwt
-
+from flask import current_app
 from blocklist import BLOCKLIST
 from db import db
 from models import UserModel
 from schemas import UserSchema
+from tasks import test_function
 
 blp = Blueprint("Users", 'user', description="Operations on users")
 
@@ -30,6 +31,7 @@ class UserRegister(MethodView):
             db.session.commit()
         except SQLAlchemyError as e:
             abort(500, message=str(e))
+        current_app.queue.enqueue(test_function)
         return user
 
 @blp.route('/user/<int:user_id>')

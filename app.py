@@ -4,6 +4,8 @@ from flask import Flask
 from flask_smorest import Api
 from flask_jwt_extended import JWTManager
 
+import redis
+from rq import Queue
 from db import db
 from blocklist import BLOCKLIST
 from dotenv import load_dotenv
@@ -19,6 +21,8 @@ load_dotenv()
 
 def create_app(db_url=None):
     app = Flask(__name__)
+    connection = redis.from_url(os.getenv("REDIS_URL"))
+    app.queue = Queue("emails", connection=connection)
     app.config.from_object(Config)
 
     db.init_app(app)
